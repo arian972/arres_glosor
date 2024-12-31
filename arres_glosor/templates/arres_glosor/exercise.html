@@ -1,0 +1,84 @@
+{% extends "arres_glosor/layout.html" %}
+{% load static %}
+
+{% block body %}
+
+    <input type="hidden" id="csrf-token" value="{{ csrf_token }}">
+
+    <h1>{{ exercise.exercise_name }}</h1>
+    <a class="nav-link" href="{% url 'display_profile' exercise.creator.username %}"><p class="overview-exercise_creator"><span style="font-weight: 420">Av: </span ><span class="underline">{{ exercise.creator }}</span></p></a>
+
+    <div class="mb-3vh">
+        <button id="replay-button" type="submit" class="button6">Börja Om</button>
+        <button id="change-language-button" type="submit" class="button6">{% if switched == 'True' %}Återställ Språk{% else %}Byt Språk{% endif %}</button>
+    </div>
+
+
+    {% if switched == 'True' %}
+        <script>
+            document.querySelector('#change-language-button').addEventListener('click', function() {
+                window.location.href = "{% url 'exercise' exercise.id %}?change_language=false";
+            });
+
+            function play_again() {
+                window.location.href = "{% url 'exercise' exercise.id %}?change_language=true";
+            }
+        </script>
+    {% else %}
+        <script>
+            document.querySelector('#change-language-button').addEventListener('click', function() {
+                window.location.href = "{% url 'exercise' exercise.id %}?change_language=true";
+            });
+
+            function play_again() {
+                window.location.href = "{% url 'exercise' exercise.id %}?change_language=false";
+            }
+        </script>
+    {% endif %}
+
+        <script>
+            document.querySelector('#replay-button').addEventListener('click', play_again);
+        </script>
+
+    <div id="display-frame" class="frame5 exercise-input-field">
+        <div class="center-items-row">
+            <input id="word-field" type="text" class="form-control mb-1vh" readonly data-glosa-index="">
+            <div class="exercise-input-language-box">{{ exercise.language1 }}</div>
+        </div>
+
+        <div class="center-items-row align-items-center">
+            <input id="answer-field" type="text" class="form-control" placeholder="Översätt" autofocus autocomplete="off">
+            <div class="exercise-input-language-box">{{ exercise.language2 }}</div>
+        </div>
+
+        <button id="answer-button" type="submit" class= "button4">Svara</button>
+    </div>
+
+
+    <script>
+        var translations = {{ exercise.translations|safe}};
+        var display_language = {% if switched == 'True' %} "language2" {% else %} "language1" {% endif %}
+        var answer_language = {% if switched == 'True' %} "language1" {% else %} "language2" {% endif %}
+        var display_language_specific = "{{ exercise.language1 }}"
+        var answer_language_specific = "{{ exercise.language2 }}"
+
+    </script>
+    <script src="{% static 'arres_glosor/exercise.js' %}"></script>
+    <script>
+        document.querySelector('#answer-button').addEventListener('click', function() {
+            submit_answer();
+        });
+
+        document.querySelector('#answer-field').addEventListener('keypress', function(event) {
+            if (event.key === 'Enter') { // Check if the pressed key is "Enter"
+                submit_answer(); // Call the function
+            }
+});
+    </script>
+
+
+{% endblock %}
+
+<div class="answer-display-frame">
+    Rätta svar: CORRECT / WHOLE
+</div>

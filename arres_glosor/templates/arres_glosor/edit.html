@@ -1,0 +1,146 @@
+{% extends "arres_glosor/layout.html" %}
+{% load static %}
+
+{% block body %}
+
+    <input type="hidden" id="csrf-token" value="{{ csrf_token }}">
+
+    <h1>{{ exercise.exercise_name }} - Edit</h1>
+
+    <div class="center-items-1">
+        <div class="items-column width-50vw width-100p mb-1-767px">
+            <div class="frame4 mb-3vh center-items-column">
+                <div class="mb-3vh center-items-column padding1-1000px" style="width: 100%;">
+                    <p class="edit-text1 mb-5px">Övningens Namn</p>
+                    <input id="input-exercise_name" type="text" class="form-control input-width2" placeholder="Språk 1" autocomplete="off" value="{{ exercise.exercise_name }}">
+                </div>
+
+                <div class="center-items-2" style="width: 100%">
+                    <div class="mb-1-1000px margin-1 center-items-column" style="width: 100%">
+                        <p class="edit-text1 mb-5px">Språk 1</p>
+                        <input id="input-language1" type="text" class="form-control input-width3" placeholder="Språk 1" autocomplete="off" value="{{ exercise.language1 }}">
+                    </div>
+
+                    <div class="margin-1 center-items-column" style="width: 100%">
+                       <p class="edit-text1 mb-5px">Språk 2</p>
+                       <input id="input-language2" type="text" class="form-control input-width3" placeholder="Språk 2" autocomplete="off" value="{{ exercise.language2 }}">
+                    </div>
+                </div>
+            </div>
+
+            <div class="frame4">
+                <div class="center-items-row mb-3vh">
+                    <button id="save-button" type="submit" class= "button1 bg-268de0">Spara</button>
+                    <a href="{% url 'index' %}"><button id="cancel-button" type="button" class="button2">Avbryt</button></a>
+                </div>
+
+                <div class="center-items-column">
+                    <button id="delete-button" type="submit" class= "button3">Radera Övning</button>
+                </div>
+
+            </div>
+        </div>
+
+
+        <div class="items-column width-50vw ml-3vw-1 width-100p-1">
+            <div class="frame4 mb-3vh">
+                <h2 class="mb-3vh">Lägg till innehåll</h2>
+
+                <div class="center-items-column" style="width: 100%">
+                    <input id="glosa-language1" type="text" class="form-control input-width4" placeholder="Skriv in glosan på {{ exercise.language1 }}" autocomplete="off">
+
+                    <input id="glosa-language2" type="text" class="form-control input-width4 mt-1-5vh" placeholder="Skriv in glosan på {{ exercise.language2 }}" autocomplete="off">
+                </div>
+
+                <button id="add-button" type="submit" class= "button4">Lägg till</button>
+
+            </div>
+
+
+            <div id="content-div" class="frame4 {% if exercise.translations|length == 0 %}disappear-1{% endif %}">
+                <h2 class="mb-3vh">Innehåll</h2>
+
+                <div class="grid-container-1">
+                    <div class="grid-heading-1 border-t-l-8px">{{ exercise.language1 }}</div>
+                    <div class="grid-heading-1 b-r-none">{{ exercise.language2 }}</div>
+                    <div class="grid-heading-1 border-t-r-8px b-l-none"></div>
+
+                    {% for translation in exercise.translations %}
+                        <div class="grid-item-1 {% if forloop.last %} border-b-l-8px {% endif %}">{{ translation.language1 }}</div>
+                        <div class="grid-item-1 b-r-none ">{{ translation.language2 }}</div>
+                        <div class="delete-translation-index delete-translation {% if forloop.last %} border-b-r-8px {% endif %}"  data-index="{{ forloop.counter0 }}">
+                            <img class="delete-translation-index" src="{% static 'photos/trash_bin_red.jpg' %}" alt="Remove">
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <script type="text/javascript">
+        var trashBinImageUrl = "{% static 'photos/trash_bin_red.jpg' %}";
+    </script>
+    <script src="{% static 'arres_glosor/edit.js' %}"></script>
+    <script>
+        document.querySelector('#save-button').addEventListener('click', function() {
+            const response = exercise_save("{{ exercise.id }}")
+            if (response === 0) {
+                window.location.href="{% url 'index' %}";
+            }
+        });
+
+        document.querySelector('#add-button').addEventListener('click', function() {
+            exercise_add("{{ exercise.id}}")
+            document.querySelector('#add-button').setAttribute('src', '{% static "photos/trash_bin_red.jpg" %}');
+        });
+
+        document.querySelector('#delete-button').addEventListener('click', function() {
+            exercise_delete("{{ exercise.id}}")
+        });
+
+        document.querySelector('.grid-container-1').addEventListener('click', function(event) {
+            const deleteElement = event.target.closest('.delete-translation');
+
+            if (deleteElement) {
+                const index = deleteElement.getAttribute("data-index");
+
+                translation_delete("{{ exercise.id }}", index);
+
+                deleteElement.previousElementSibling.remove()
+                deleteElement.previousElementSibling.remove()
+                deleteElement.remove()
+
+                if (document.querySelector('.grid-container-1').children.length === 3) {
+                    document.querySelector('#content-div').classList.add('disappear-1');
+                }
+            }
+        });
+
+        document.querySelector('#glosa-language1').addEventListener('keypress', function(event) {
+            if (event.key === 'Enter' && document.querySelector('#glosa-language2').value && document.querySelector('#glosa-language1').value) {
+                exercise_add("{{ exercise.id}}")
+                document.querySelector('#add-button').setAttribute('src', '{% static "photos/trash_bin_red.jpg" %}');
+            } else if (event.key === 'Enter' && document.querySelector('#glosa-language1').value) {
+                document.querySelector('#glosa-language2').focus();
+            }
+        })
+
+        document.querySelector('#glosa-language2').addEventListener('keypress', function(event) {
+            if (event.key === 'Enter' && document.querySelector('#glosa-language2').value && document.querySelector('#glosa-language1').value) {
+                exercise_add("{{ exercise.id}}")
+                document.querySelector('#add-button').setAttribute('src', '{% static "photos/trash_bin_red.jpg" %}');
+                document.querySelector('#glosa-language1').focus()
+            } else if (event.key === 'Enter' && document.querySelector('#glosa-language2').value) {
+                document.querySelector('#glosa-language1').focus();
+            }
+        })
+
+
+    </script>
+
+
+
+{% endblock %}
+

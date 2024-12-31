@@ -1,0 +1,38 @@
+{% extends "arres_glosor/layout.html" %}
+{% load static %}
+
+{% block body %}
+
+    <h1>{{ user_username }}</h1>
+    <hr>
+    <h2>Exercises</h2>
+
+    {% for exercise in user_exercises %}
+        <div class="frame2 mb-1-5vh flex-container-opposite" data-url="{% url 'overview' exercise.id %}" onclick="window.location.href=this.getAttribute('data-url');" style="cursor: pointer">
+            <div>
+                <p class="heading-exercise_name">{{ exercise.exercise_name }}</p>
+                <p class="heading-exercise_creator"><span style="font-weight: 420">Av: </span ><span class="underline">{{ exercise.creator }}</span></p>
+                <p class="heading-exercise_date">{{ exercise.formatted_time_last_edited }}</p>
+            </div>
+            <div class="display-flex-vertical-center">
+                <div class="frame3 disappear-sm">{{ exercise.language1 }}</div>
+                <div class="frame3 disappear-sm">{{ exercise.language2 }}</div>
+                <div class="frame3">{{ exercise.translations | length }}</div>
+
+
+                {% if exercise.creator == user %}
+                <div class="edit-pencil-img" data-url="{% url 'edit' exercise.id %}" onclick="event.stopPropagation(); window.location.href=this.getAttribute('data-url');" style="cursor: pointer">
+                    <img src="{% static 'photos/edit_pencil_blue.png' %}" alt="Edit">
+                </div>
+                {% else %}
+                <div class="edit-pencil-img-size"></div>
+                {% endif %}
+            </div>
+        </div>
+
+
+    {% endfor %}
+
+
+{% endblock %}
+

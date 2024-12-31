@@ -1,0 +1,28 @@
+{% extends "arres_glosor/layout.html" %}
+
+{% block body %}
+
+    <h1>Logga in</h1>
+
+    <div class="frame4">
+
+        {% if message %}
+            <div class="mb-1vh" style="font-weight: 500">{{ message }}</div>
+        {% endif %}
+
+        <form action="{% url 'login' %}" method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                <input autofocus class="form-control mb-1vh" type="text" name="username" placeholder="Användarnamn">
+            </div>
+            <div class="form-group">
+                <input class="form-control mb-1vh" type="password" name="password" placeholder="Lösenord">
+            </div>
+            <input class="btn btn-primary mb-1-5vh" type="submit" value="Logga in">
+        </form>
+        
+    Har du inte ett konto? <a href="{% url 'register' %}">Registrera här.</a>
+    </div>
+
+
+{% endblock %}

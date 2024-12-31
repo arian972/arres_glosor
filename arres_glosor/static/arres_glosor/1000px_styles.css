@@ -1,0 +1,48 @@
+@media (max-width: 1000px) {
+    body {
+        font-size: 18px;
+    }
+
+    .body {
+        margin: 30px 65px;
+    }
+
+    .input-width1 {
+        width: 220px
+    }
+
+    .input-exercise-name-size {
+        width: 400px;
+    }
+
+    .edit-pencil-img img {
+        width: 50px;
+    }
+
+    .edit-pencil-img-size {
+        width: 70px;
+    }
+
+    .frame3 {
+        padding: 5px 18px;
+    }
+
+    .center-items-2 {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+    }
+
+    .mb-1-1000px {
+        margin-bottom: 3vh;
+    }
+
+    .padding1-1000px {
+        padding: 0;
+    }
+
+    .font-size-1 {
+        font-size: 18px;
+    }
+}

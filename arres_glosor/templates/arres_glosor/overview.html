@@ -1,0 +1,77 @@
+{% extends "arres_glosor/layout.html" %}
+{% load static %}
+
+{% block body %}
+
+    <h1>{{ exercise.exercise_name }}</h1>
+    <a class="nav-link" href="{% url 'display_profile' exercise.creator.username %}"><p class="overview-exercise_creator"><span style="font-weight: 420">Av: </span ><span class="underline">{{ exercise.creator }}</span></p></a>
+
+
+    <div class="center-items-1" >
+        <div class="items-column width-60vw">
+            <div class="frame4 center-items-column mb-3vh">
+                <div class="center-items-row">
+                    <button id="play-button" type="submit" class= "button1 {% if exercise.translations|length == 0 %}button-disabled-1{% endif %}">Öva</button>
+                    <a href="{% url 'index' %}"><button id="cancel-button" type="button" class="button2">Avbryt</button></a>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="frame4 ml-3vw width-100p-1">
+            <h2 class="mb-3vh">Innehåll</h2>
+
+            <div class="grid-container-2">
+                <div class="grid-heading-1 border-t-l-8px">{{ exercise.language1 }}</div>
+                <div class="grid-heading-1 border-t-r-8px">{{ exercise.language2 }}</div>
+
+                {% if exercise.translations|length == 0 %}
+
+                    <div class="grid-item-1 border-b-l-8px">&nbsp;</div>
+                    <div class="grid-item-1 border-b-r-8px">&nbsp;</div>
+
+                {% else %}
+
+                    {% for translation in exercise.translations %}
+                        <div class="grid-item-1 {% if forloop.last %} border-b-l-8px {% endif %}">{{ translation.language1 }}</div>
+                        <div class="grid-item-1 {% if forloop.last %} border-b-r-8px {% endif %}">{{ translation.language2 }}</div>
+                    {% endfor %}
+
+                {% endif %}
+
+
+            </div>
+        </div>
+
+    </div>
+
+
+
+    {% if exercise.translations|length == 0 %}
+
+    <script>
+        document.querySelector('#play-button').addEventListener('click', function() {
+            document.querySelectorAll('.warning-message2').forEach(element => element.remove());
+
+            const parentDiv = document.querySelector('#play-button').parentElement.parentElement;
+
+            let warningElement = document.createElement('div');
+            warningElement.textContent = 'Övningen saknar innehåll, du kan inte öva.';
+            warningElement.classList.add('warning-message2');
+
+            parentDiv.appendChild(warningElement);
+        });
+    </script>
+
+    {% else %}
+
+    <script>
+        document.querySelector('#play-button').addEventListener('click', function() {
+            window.location.href="{% url 'exercise' exercise.id %}"
+        });
+    </script>
+
+    {% endif %}
+
+{% endblock %}
+

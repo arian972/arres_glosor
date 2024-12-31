@@ -1,0 +1,70 @@
+{% extends "arres_glosor/layout.html" %}
+{% load static %}
+
+{% block body %}
+
+
+    <h1>Skapa Övning</h1>
+
+    <div class="frame1 mb-3vh">
+        <h3>Övningens Namn</h3>
+
+        <div class="center-items-column">
+            <div class="center-items-row">
+                <input id="input-exercise-name" name="input-exercise-name" type="text" class="form-control input-exercise-name-size" placeholder="Övningens Namn" autocomplete="off" autofocus>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="frame1 mb-3vh">
+        <h3>Språk</h3>
+
+
+
+        <div class="center-items-1">
+            <div class="center-items-column width-100p">
+                <div class="center-items-row margin-1">
+                    <section class="custom-dropdown">
+                        <img src="static/photos/message_icon.jpg" alt="Dropdown Image" id="dropdown-button1" class="dropdown-button">
+                        <div class="dropdown-content1 dropdown-content fade-in none">
+                            <div class="dropdown-item dropdown-item1">Svenska</div>
+                            <div class="dropdown-item dropdown-item1">Engelska</div>
+                            <div class="dropdown-item dropdown-item1">Tyska</div>
+                        </div>
+                    </section>
+                    <input id="input-language1" name="input-language1" type="text" class="form-control input-width1" placeholder="Språk 1" autocomplete="off" >
+                </div>
+            </div>
+
+            <div class="center-items-column width-100p">
+                <div class="center-items-row margin-1">
+                    <section class="custom-dropdown">
+                        <img src="static/photos/message_icon.jpg" alt="Dropdown Image" id="dropdown-button2" class="dropdown-button" autocomplete="off">
+                        <div class="dropdown-content2 dropdown-content fade-in none">
+                            <div class="dropdown-item dropdown-item2">Svenska</div>
+                            <div class="dropdown-item dropdown-item2">Engelska</div>
+                            <div class="dropdown-item dropdown-item2">Tyska</div>
+                        </div>
+                    </section>
+                    <input id="input-language2" name="input-language2" type="text" class="form-control input-width1" placeholder="Språk 2" autocomplete="off">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="frame1 mb-3vh center-items-column">
+
+        <div class="center-items-row">
+            <button id="create-button" type="submit" class= "button1 bg-268de0">Skapa Övning</button>
+            <a href="{% url 'index' %}"><button id="cancel-button" type="button" class="button2">Avbryt</button></a>
+
+            <input type="hidden" id="csrf-token" value="{{ csrf_token }}">
+        </div>
+    </div>
+
+
+    <script src="{% static 'arres_glosor/create_exercise.js' %}"></script>
+
+
+{% endblock %}
